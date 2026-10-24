@@ -408,7 +408,7 @@ nav.nav-scrolled {
 .code-scroll:hover .code-content { animation-play-state: paused; }
 
 .code-content {
-    animation: scrollCode 45s linear infinite;
+    animation: scrollCode 25s linear infinite;
     color: #f5d0e6;
     font-size: 0.82rem;
     line-height: 1.65;
