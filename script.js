@@ -15,8 +15,10 @@ const typedLines = [
     "Secure. Optimized. Clean."
 ];
 
-// Snippets shown in the scrolling code panel (plain strings are Luau)
+// Snippets shown in the scrolling code panel: { file, code } is Luau,
+// add lang: 'js' for JavaScript. "file" is shown in the panel's header.
 const codeSnippets = [
+{ file: "AdminPanel.server.lua", code:
 `local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextService = game:GetService("TextService")
@@ -55,7 +57,8 @@ local function resolveUser(target)
 		end
 	end
 	if type(target) ~= "number" or target ~= math.floor(target) or target <= 0 then
-		return nil`,
+		return nil` },
+{ file: "BanService.lua", code:
 `local Players = game:GetService("Players")
 local DataStoreService = game:GetService("DataStoreService")
 local MessagingService = game:GetService("MessagingService")
@@ -103,7 +106,8 @@ do
 	else
 		warn("[BanService] DataStore unavailable, bans and settings won't be saved:", result)
 	end
-end`,
+end` },
+{ file: "GroupBoost.server.lua", code:
 `local Players = game:GetService("Players")
 local GroupService = game:GetService("GroupService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -129,8 +133,8 @@ local function check(player, fresh)
 	if not ok then return player:GetAttribute("GroupBoost") == true end
 	if player.Parent then player:SetAttribute("GroupBoost", member or nil) end
 	return member
-end`,
-{ lang: 'js', code:
+end` },
+{ lang: 'js', file: "scanFolder.js", code:
 `while (pending.length > 0) {
     const { directory, depth } = pending.pop();
 
@@ -760,13 +764,24 @@ function highlightCode(code, lang) {
 
 function renderCodePanel() {
     const box = document.getElementById('codeContent');
-    const html = codeSnippets.map(s => {
-        // Plain strings are Luau; objects say their language: { lang: 'js', code: '...' }
-        const { lang, code } = typeof s === 'string' ? { lang: 'luau', code: s } : s;
-        return `<div class="code-snippet"><span class="code-lang">${LANGUAGES[lang].label}</span>${highlightCode(code, lang)}</div>`;
-    }).join('');
+    const html = codeSnippets.map(({ lang = 'luau', file = '', code }) =>
+        `<div class="code-snippet" data-file="${escapeHtml(file)}"><span class="code-lang">${LANGUAGES[lang].label}</span>${highlightCode(code, lang)}</div>`
+    ).join('');
     // Rendered twice so the -50% scroll animation loops seamlessly
     box.innerHTML = html + html;
+
+    // Keep the header's file name in sync with the snippet passing through the panel
+    const scroll = document.querySelector('.code-scroll');
+    const fileLabel = document.querySelector('.code-file');
+    const snippetEls = [...box.querySelectorAll('.code-snippet')];
+    setInterval(() => {
+        const mid = scroll.getBoundingClientRect().top + scroll.clientHeight / 3;
+        const current = snippetEls.find(el => {
+            const r = el.getBoundingClientRect();
+            return r.top <= mid && r.bottom > mid;
+        });
+        if (current && fileLabel.textContent !== current.dataset.file) fileLabel.textContent = current.dataset.file;
+    }, 250);
 }
 
 // ============================================================
