@@ -242,7 +242,7 @@ function startHeroCanvas() {
         columns = Math.ceil(w / FONT_SIZE);
         drops = Array.from({ length: columns }, () => ({
             y: Math.random() * -h / FONT_SIZE,
-            speed: 0.25 + Math.random() * 0.55
+            speed: 0.15 + Math.random() * 0.35
         }));
         terminal = terminal || { lines: [], current: 0, chars: 0, wait: 0 };
         ctx.fillStyle = '#12091a';
@@ -347,7 +347,7 @@ function startHeroCanvas() {
         ctx.fillRect(0, 0, w, h);
         ctx.font = '13px "JetBrains Mono", monospace';
 
-        hexOffset += 0.6;
+        hexOffset += 0.4;
         if (hexOffset >= 18) { hexOffset -= 18; hexRows.shift(); hexRows.push(makeHexRow()); }
         scanY = (scanY + 3) % (h + 120);
 
@@ -647,11 +647,15 @@ function startHeroCanvas() {
         }, 800);
     }
 
-    function draw() {
+    // Capped at ~60fps so the animation runs at the same speed on 120/144Hz screens
+    let lastFrame = 0;
+    function draw(now) {
+        requestAnimationFrame(draw);
+        if (now - lastFrame < 1000 / 60 - 2) return;
+        lastFrame = now;
         frame++;
         scenes[sceneIndex].draw();
         if (w > 700) drawTerminal();
-        requestAnimationFrame(draw);
     }
 
     resize();
@@ -659,7 +663,7 @@ function startHeroCanvas() {
     initGrid();
     window.addEventListener('resize', () => { resize(); scenes[sceneIndex].init(); });
     if (reducedMotion) { drawRain(); drawLogo(); }
-    else { draw(); setInterval(nextScene, SCENE_SECONDS * 1000); }
+    else { requestAnimationFrame(draw); setInterval(nextScene, SCENE_SECONDS * 1000); }
 }
 
 // ============================================================
