@@ -15,8 +15,8 @@ const typedLines = [
     "Secure. Optimized. Clean."
 ];
 
-// Luau snippets shown in the scrolling code panel
-const luauSnippets = [
+// Snippets shown in the scrolling code panel (plain strings are Luau)
+const codeSnippets = [
 `local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextService = game:GetService("TextService")
@@ -129,7 +129,55 @@ local function check(player, fresh)
 	if not ok then return player:GetAttribute("GroupBoost") == true end
 	if player.Parent then player:SetAttribute("GroupBoost", member or nil) end
 	return member
-end`
+end`,
+{ lang: 'js', code:
+`while (pending.length > 0) {
+    const { directory, depth } = pending.pop();
+
+    let entries;
+    try {
+      entries = await readdir(directory, { withFileTypes: true });
+    } catch (error) {
+      if (!ACCESS_ERROR_CODES.has(error.code)) throw error;
+      totals.skipped += 1;
+      continue;
+    }
+
+    const filePaths = [];
+    for (const entry of entries) {
+      if (ignored.has(entry.name)) continue;
+      if (!includeHidden && entry.name.startsWith('.')) continue;
+
+      const entryPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) {
+        totals.directories += 1;
+        if (depth < maxDepth) pending.push({ directory: entryPath, depth: depth + 1 });
+      } else if (entry.isFile()) {
+        filePaths.push(entryPath);
+      }
+    }
+
+    const sizes = await Promise.all(filePaths.map(readFileSize));
+
+    filePaths.forEach((filePath, index) => {
+      const bytes = sizes[index];
+      if (bytes === null) {
+        totals.skipped += 1;
+        return;
+      }
+
+      totals.files += 1;
+      totals.bytes += bytes;
+
+      const extension = path.extname(filePath).toLowerCase() || NO_EXTENSION;
+      const bucket = extensions.get(extension) ?? { files: 0, bytes: 0 };
+      bucket.files += 1;
+      bucket.bytes += bytes;
+      extensions.set(extension, bucket);
+
+      recordLargest(largest, { filePath, bytes }, top);
+    });
+  }` }
 ];
 
 // ============================================================
@@ -667,17 +715,33 @@ function startHeroCanvas() {
 }
 
 // ============================================================
-//  Luau syntax highlighting for the code panel
+//  Syntax highlighting for the code panel (Luau and JavaScript)
 // ============================================================
-const LUAU_KEYWORDS = new Set(['local', 'function', 'end', 'return', 'if', 'then', 'else', 'elseif',
-    'for', 'in', 'do', 'while', 'repeat', 'until', 'not', 'and', 'or', 'nil', 'true', 'false', 'break', 'continue']);
+const LANGUAGES = {
+    luau: {
+        label: 'Luau',
+        comment: '--',
+        keywords: new Set(['local', 'function', 'end', 'return', 'if', 'then', 'else', 'elseif',
+            'for', 'in', 'do', 'while', 'repeat', 'until', 'not', 'and', 'or', 'nil', 'true', 'false', 'break', 'continue']),
+        special: /Service$|^game$|^workspace$/
+    },
+    js: {
+        label: 'JavaScript',
+        comment: '//',
+        keywords: new Set(['const', 'let', 'var', 'function', 'return', 'if', 'else', 'for', 'of', 'in', 'while',
+            'do', 'try', 'catch', 'finally', 'throw', 'await', 'async', 'new', 'continue', 'break', 'null',
+            'undefined', 'true', 'false', 'class', 'this', 'typeof']),
+        special: /^(Promise|Math|JSON|Object|Array|path|console)$/
+    }
+};
 
 function escapeHtml(s) {
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function highlightLuau(code) {
-    const pattern = /(--.*$)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_]\w*)(?=\s*\()|([A-Za-z_]\w*)/gm;
+function highlightCode(code, lang) {
+    const { comment, keywords, special } = LANGUAGES[lang];
+    const pattern = new RegExp(`(${comment === '--' ? '--' : '\\/\\/'}.*$)|("(?:[^"\\\\]|\\\\.)*"|'(?:[^'\\\\]|\\\\.)*')|(\\b\\d+(?:\\.\\d+)?\\b)|([A-Za-z_]\\w*)(?=\\s*\\()|([A-Za-z_]\\w*)`, 'gm');
     let out = '', last = 0, m;
     while ((m = pattern.exec(code))) {
         out += escapeHtml(code.slice(last, m.index));
@@ -685,9 +749,9 @@ function highlightLuau(code) {
         if (m[1]) out += `<span class="tok-com">${text}</span>`;
         else if (m[2]) out += `<span class="tok-str">${text}</span>`;
         else if (m[3]) out += `<span class="tok-num">${text}</span>`;
-        else if (m[4]) out += LUAU_KEYWORDS.has(m[4]) ? `<span class="tok-kw">${text}</span>` : `<span class="tok-fn">${text}</span>`;
-        else if (LUAU_KEYWORDS.has(m[5])) out += `<span class="tok-kw">${text}</span>`;
-        else if (/Service$|^game$|^workspace$/.test(m[5])) out += `<span class="tok-svc">${text}</span>`;
+        else if (m[4]) out += keywords.has(m[4]) ? `<span class="tok-kw">${text}</span>` : `<span class="tok-fn">${text}</span>`;
+        else if (keywords.has(m[5])) out += `<span class="tok-kw">${text}</span>`;
+        else if (special.test(m[5])) out += `<span class="tok-svc">${text}</span>`;
         else out += text;
         last = pattern.lastIndex;
     }
@@ -696,7 +760,11 @@ function highlightLuau(code) {
 
 function renderCodePanel() {
     const box = document.getElementById('codeContent');
-    const html = luauSnippets.map(s => `<div class="code-snippet">${highlightLuau(s)}</div>`).join('');
+    const html = codeSnippets.map(s => {
+        // Plain strings are Luau; objects say their language: { lang: 'js', code: '...' }
+        const { lang, code } = typeof s === 'string' ? { lang: 'luau', code: s } : s;
+        return `<div class="code-snippet"><span class="code-lang">${LANGUAGES[lang].label}</span>${highlightCode(code, lang)}</div>`;
+    }).join('');
     // Rendered twice so the -50% scroll animation loops seamlessly
     box.innerHTML = html + html;
 }

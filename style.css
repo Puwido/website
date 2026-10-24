@@ -422,7 +422,19 @@ nav.nav-scrolled {
     border-bottom: 1px dashed rgba(255, 77, 196, 0.15);
 }
 
-/* Luau syntax colors */
+.code-lang {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 1px 8px;
+    border-radius: 4px;
+    background: rgba(255, 77, 196, 0.15);
+    color: var(--primary);
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Syntax colors */
 .tok-kw  { color: #8be9fd; }
 .tok-str { color: #f1fa8c; }
 .tok-num { color: #bd93f9; }
