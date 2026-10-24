@@ -373,6 +373,9 @@ nav.nav-scrolled {
     box-shadow: 0 0 35px rgba(255, 46, 147, 0.25);
     font-family: var(--font-code);
     overflow: hidden;
+    /* Code can't be highlighted or copied */
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .code-header {
@@ -408,7 +411,7 @@ nav.nav-scrolled {
 .code-scroll:hover .code-content { animation-play-state: paused; }
 
 .code-content {
-    animation: scrollCode 25s linear infinite;
+    animation: scrollCode 15s linear infinite;
     color: #f5d0e6;
     font-size: 0.82rem;
     line-height: 1.65;

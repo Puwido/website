@@ -770,6 +770,11 @@ function renderCodePanel() {
     // Rendered twice so the -50% scroll animation loops seamlessly
     box.innerHTML = html + html;
 
+    // Block copying, right-click and dragging text out of the panel
+    const panel = document.querySelector('.code-panel');
+    ['copy', 'cut', 'contextmenu', 'dragstart', 'selectstart'].forEach(type =>
+        panel.addEventListener(type, e => e.preventDefault()));
+
     // Keep the header's file name in sync with the snippet passing through the panel
     const scroll = document.querySelector('.code-scroll');
     const fileLabel = document.querySelector('.code-file');
