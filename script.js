@@ -16,7 +16,7 @@ const typedLines = [
 ];
 
 // Snippets shown in the scrolling code panel: { file, code } is Luau,
-// add lang: 'js' for JavaScript. "file" is shown in the panel's header.
+// add lang: 'js' for JavaScript or lang: 'cs' for C#. "file" is shown in the panel's header.
 const codeSnippets = [
 { file: "AdminPanel.server.lua", code:
 `local Players = game:GetService("Players")
@@ -181,7 +181,28 @@ end` },
 
       recordLargest(largest, { filePath, bytes }, top);
     });
-  }` }
+  }` },
+{ lang: 'cs', file: "Report.cs", code:
+`{
+        if (report.Largest.Count > 0)     Console.WriteLine();
+        Write("  dirscope  ", ConsoleColor.Cyan);
+        Write(report.Root + Environment.NewLine + Environment.NewLine, ConsoleColor.DarkGray);
+
+        Line("Files", $"{report.Files:N0}");
+        Line("Directories", $"{report.Directories:N0}");
+        Line("Total size", FormatBytes(report.Bytes));
+        Line("Scanned in", $"{report.DurationMs:N0} ms");
+        if (report.Skipped > 0)
+        {
+            Line("Skipped", $"{report.Skipped:N0} (permission denied)", ConsoleColor.Yellow);
+        }
+        Console.WriteLine();
+
+        if (report.Files == 0)
+        {
+            Write("  No files found." + Environment.NewLine + Environment.NewLine, ConsoleColor.DarkGray);
+            return;
+        }` }
 ];
 
 // ============================================================
@@ -719,7 +740,7 @@ function startHeroCanvas() {
 }
 
 // ============================================================
-//  Syntax highlighting for the code panel (Luau and JavaScript)
+//  Syntax highlighting for the code panel (Luau, JavaScript and C#)
 // ============================================================
 const LANGUAGES = {
     luau: {
@@ -736,6 +757,14 @@ const LANGUAGES = {
             'do', 'try', 'catch', 'finally', 'throw', 'await', 'async', 'new', 'continue', 'break', 'null',
             'undefined', 'true', 'false', 'class', 'this', 'typeof']),
         special: /^(Promise|Math|JSON|Object|Array|path|console)$/
+    },
+    cs: {
+        label: 'C#',
+        comment: '//',
+        keywords: new Set(['if', 'else', 'for', 'foreach', 'in', 'while', 'do', 'return', 'var', 'new', 'null',
+            'true', 'false', 'void', 'int', 'long', 'string', 'bool', 'public', 'private', 'static', 'class',
+            'using', 'try', 'catch', 'throw', 'async', 'await', 'break', 'continue']),
+        special: /^(Console|ConsoleColor|Environment|Math|String)$/
     }
 };
 
