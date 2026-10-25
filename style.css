@@ -323,6 +323,28 @@ nav.nav-scrolled {
 
 .about-text h3 { margin-top: 30px; margin-bottom: 8px; font-size: 1.5rem; }
 
+.intro-facts {
+    list-style: none;
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.intro-facts li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text-main);
+    font-size: 0.98rem;
+}
+
+.intro-facts i {
+    width: 18px;
+    text-align: center;
+    color: var(--primary);
+}
+
 .lang-list { display: flex; flex-wrap: wrap; gap: 10px; }
 
 .lang-tag {
