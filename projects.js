@@ -65,6 +65,12 @@ const projects = [
   }
 ];
 
+// Script/system videos for the Showcase section. Put the .mp4 in assets/showcase/
+// and add an entry like this:
+//   { title: "Combat System", bio: "What it does and how it works.", video: "assets/showcase/combat.mp4" },
+const showcase = [
+];
+
 const skills = [
   { icon: "fa-code",          title: "Game Systems",   text: "Combat, rounds, inventories, shops, quests — built modular and reusable." },
   { icon: "fa-database",      title: "Data Saving",    text: "Safe DataStore handling with session locking, retries and versioning." },

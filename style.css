@@ -691,6 +691,15 @@ nav.nav-scrolled {
 
 .coming-soon-card p { color: var(--text-muted); }
 
+/* ---------- Showcase ---------- */
+.showcase { padding: 110px 10%; background-color: var(--bg-dark); }
+
+.section-sub {
+    text-align: center;
+    color: var(--text-muted);
+    margin: -1.5rem 0 3rem;
+}
+
 /* ---------- Footer ---------- */
 footer {
     text-align: center;
@@ -797,6 +806,6 @@ footer {
     .nav-links li { opacity: 0; }
     .nav-links.nav-active { transform: translateX(0); }
 
-    .about, .skills-section, .projects { padding: 90px 16px; }
+    .about, .skills-section, .projects, .showcase { padding: 90px 16px; }
     h2 { font-size: 2rem; }
 }

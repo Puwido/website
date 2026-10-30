@@ -920,6 +920,42 @@ function renderProjects() {
     renderFilters();
 }
 
+function renderShowcase() {
+    const grid = document.getElementById('showcaseGrid');
+    grid.innerHTML = '';
+
+    showcase.forEach((item, i) => {
+        const card = document.createElement('div');
+        card.className = 'project-card reveal';
+        card.innerHTML = `
+            <div class="project-image">
+                <div class="media"></div>
+                <div class="overlay"><button class="play-btn">Watch Video <i class="fas fa-play"></i></button></div>
+            </div>
+            <div class="project-info">
+                <h3>${escapeHtml(item.title)}</h3>
+                <p>${escapeHtml(item.bio)}</p>
+            </div>`;
+        grid.appendChild(card);
+
+        buildMedia(card.querySelector('.media'), item, i);
+        card.querySelector('.play-btn').addEventListener('click', () => {
+            if (card.classList.contains('has-video')) openVideo(item.video);
+            else showToast('Video coming soon!');
+        });
+    });
+
+    if (!showcase.length) {
+        const soon = document.createElement('div');
+        soon.className = 'project-card coming-soon-card reveal';
+        soon.innerHTML = `
+            <div class="coming-soon-icon"><i class="fas fa-film"></i></div>
+            <h3>Videos Coming Soon</h3>
+            <p>Script and system showcases are on the way.</p>`;
+        grid.appendChild(soon);
+    }
+}
+
 function renderFilters() {
     const genres = ['All', ...new Set(projects.map(p => p.genre))];
     const bar = document.getElementById('filterBar');
@@ -999,6 +1035,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCodePanel();
     renderSkills();
     renderProjects();
+    renderShowcase();
     setupReveal();
     onScroll();
 });
