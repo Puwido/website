@@ -68,6 +68,7 @@ const projects = [
 // Script/system videos for the Showcase section. Put the .mp4 in assets/showcase/
 // and add an entry like this:
 //   { title: "Combat System", bio: "What it does and how it works.", video: "assets/showcase/combat.mp4" },
+// Wrap words in **double stars** in a bio to make them bold.
 const showcase = [
   {
     title: "Anti Gooner/NSFW System",
@@ -85,6 +86,28 @@ All bans go through the Roblox Ban API. You can view and manage them on your exp
     title: "Anti Ageplayer System",
     bio: "This system detects players wearing baby-style avatars and permanently bans them from your game. Every ban is issued through the Roblox Ban API, so you can review and manage them from your experience’s Moderation page in the Creator Hub.",
     video: "assets/showcase/anti-ageplayer-system.mp4"
+  },
+  {
+    title: "Anti-Injection System",
+    bio: `Detects unauthorized UIs added to a player’s PlayerGui and punishes offenders automatically with a three-strike system. Each player’s game client scans their PlayerGui 40 seconds after they join, then every 10 minutes, and flags any UI that the game didn’t create.
+
+**Strikes**
+• First offense: kick
+• Second offense: 3 day ban
+• Third offense: permanent ban
+
+Strikes are saved per account and carry across servers. Bans use Roblox’s official ban API. Detection applies to everyone and only the player who triggered it is punished.
+
+**Admin Panel**
+A compact, draggable panel that only admins receive, with every action checked on the server.
+
+• Logs: see each detection’s time, player, UI name and punishment
+• Players: view or teleport to anyone in the server
+• Bans: ban or unban by username or UserId, with lengths from 1 day to permanent. Unbanning also clears the player’s strikes.
+
+**Limitations**
+This system only sees PlayerGui, so it won’t detect UIs placed in CoreGui or hidden containers, and it won’t catch a UI added and removed between scans.`,
+    video: "assets/showcase/anti-injection-system.mp4"
   }
 ];
 

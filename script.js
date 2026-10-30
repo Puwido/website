@@ -934,7 +934,7 @@ function renderShowcase() {
             </div>
             <div class="project-info">
                 <h3>${escapeHtml(item.title)}</h3>
-                <p>${escapeHtml(item.bio)}</p>
+                <p>${escapeHtml(item.bio).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')}</p>
             </div>`;
         grid.appendChild(card);
 

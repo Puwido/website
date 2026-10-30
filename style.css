@@ -696,6 +696,7 @@ nav.nav-scrolled {
 
 /* Keeps the line breaks written in a bio */
 #showcaseGrid .project-info p { white-space: pre-line; margin-bottom: 0; }
+#showcaseGrid .project-info strong { color: var(--text-main); font-weight: 700; }
 
 .section-sub {
     text-align: center;
