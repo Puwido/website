@@ -694,6 +694,9 @@ nav.nav-scrolled {
 /* ---------- Showcase ---------- */
 .showcase { padding: 110px 10%; background-color: var(--bg-dark); }
 
+/* Keeps the line breaks written in a bio */
+#showcaseGrid .project-info p { white-space: pre-line; margin-bottom: 0; }
+
 .section-sub {
     text-align: center;
     color: var(--text-muted);
@@ -725,7 +728,7 @@ footer {
 
 .video-modal-content { position: relative; width: 100%; max-width: 960px; }
 
-.video-modal video { width: 100%; border-radius: 10px; background: #000; }
+.video-modal video { display: block; width: 100%; max-height: calc(100vh - 110px); border-radius: 10px; background: #000; }
 
 .close-modal {
     position: absolute;

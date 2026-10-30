@@ -69,6 +69,18 @@ const projects = [
 // and add an entry like this:
 //   { title: "Combat System", bio: "What it does and how it works.", video: "assets/showcase/combat.mp4" },
 const showcase = [
+  {
+    title: "Anti Gooner/NSFW System",
+    bio: `This system detects and prevents inappropriate behavior in your experience. It stops exploiters from using the jerk tool and the bang script/command, and prevents players from robanging.
+It uses a three-strike enforcement policy:
+
+1. First offense: Warning
+2. Second offense: Kick from the server
+3. Third offense: Ban
+
+All bans go through the Roblox Ban API. You can view and manage them on your experience’s Moderation page in the Creator Hub.`,
+    video: "assets/showcase/anti-nsfw-system.mp4"
+  }
 ];
 
 const skills = [
