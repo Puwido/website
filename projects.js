@@ -80,6 +80,11 @@ It uses a three-strike enforcement policy:
 
 All bans go through the Roblox Ban API. You can view and manage them on your experience’s Moderation page in the Creator Hub.`,
     video: "assets/showcase/anti-nsfw-system.mp4"
+  },
+  {
+    title: "Anti Ageplayer System",
+    bio: "This system detects players wearing baby-style avatars and permanently bans them from your game. Every ban is issued through the Roblox Ban API, so you can review and manage them from your experience’s Moderation page in the Creator Hub.",
+    video: "assets/showcase/anti-ageplayer-system.mp4"
   }
 ];
 
