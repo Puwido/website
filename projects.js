@@ -84,7 +84,25 @@ All bans go through the Roblox Ban API. You can view and manage them on your exp
   },
   {
     title: "Anti Ageplayer System",
-    bio: "This system detects players wearing baby-style avatars and permanently bans them from your game. Every ban is issued through the Roblox Ban API, so you can review and manage them from your experience’s Moderation page in the Creator Hub.",
+    bio: `Anti Looser System is a server-side moderation system that enforces your game’s avatar standards automatically. It checks each player’s avatar when they spawn and again if accessories are added during play. Players wearing prohibited items are removed without staff needing to step in.
+
+**Automated detection**
+• Checks accessories, layered clothing, shirts, pants and T-shirts against their Roblox catalog names and descriptions
+• Blocks baby-themed items, such as pacifiers and diapers, as well as items with specific prohibited names
+• Matches whole words and ignores capitalization, which helps avoid false positives on harmless items
+• Supports exact catalog ID blocking, plus an exemption list for trusted users
+
+**Admin panel**
+• Bans: View ban records, including the date, duration, reason and responsible admin, and unban players with one click or by username or UserId
+• Players: Kick or ban players in the server, or ban offline users by username or UserId, with custom durations and reasons
+• Settings: Turn auto-ban on or off, choose between banning and kicking, set the default ban length, and manage extra blocked words without editing code
+
+**Security and reliability**
+• Verifies every admin request on the server, so non-admins can’t use the panel’s functions
+• Hides the panel from non-admins and protects admins from being kicked, banned or auto-banned
+• Uses Roblox’s official ban system, with options for experience-wide enforcement and alt-account detection
+• Runs reason text through Roblox’s text filter
+• Saves ban records and settings with DataStores, so they persist through server restarts and sync across active servers`,
     video: "assets/showcase/anti-ageplayer-system.mp4"
   },
   {
